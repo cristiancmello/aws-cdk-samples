@@ -23,6 +23,13 @@ class InitialStack(Stack):
             reserved_concurrent_executions = default_concurrent_executions
         )
 
+        self.query_products= aws_lambda.Function(self, "QueryProducts",
+            runtime=lambda_runtime,
+            handler="query_products.handler",
+            code=aws_lambda.Code.from_asset(code_location),
+            reserved_concurrent_executions = default_concurrent_executions
+        )
+
         api = aws_apigateway.RestApi(
             self, "ProductsAPI",
             rest_api_name="ProductsApi",
@@ -34,6 +41,8 @@ class InitialStack(Stack):
         )
         
         products_resource = api.root.add_resource("products")
+        products_resource.add_method("GET", aws_apigateway.LambdaIntegration(self.query_products))
+
         get_product_resource = products_resource.add_resource("{id}")
         get_product_resource.add_method("GET", aws_apigateway.LambdaIntegration(self.get_product))
         
