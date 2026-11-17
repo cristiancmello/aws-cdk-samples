@@ -1,25 +1,22 @@
-from json import dumps
 
-products = {
-    "prod_123": {"id": "prod_123", "name": "Wireless Headphones", "price": 199.99},
-    "prod_456": {"id": "prod_456", "name": "USB-C Cable", "price": 12.99}
-}
+import products_db
+
+from response_utils import create_error_response, create_success_response
+
 
 def handler(event, context):
-    path_parameters = event.get("pathParameters", {}) or {}
-    product_id = event.get("pathParameters", {}).get("id")
-    
-    if not product_id:
-        return {"statusCode": 400, "body": dumps({"error": "Product ID is required"})}
-    
-    print(event)
-    print(path_parameters)
-    
-    product = products.get(product_id)
-    if not product:
-        return {"statusCode": 404, "body": dumps({"error": "Product not found"})}
+    try:
+        path_parameters = event.get("pathParameters") or {}
+        product_id = path_parameters.get("id")
 
-    return {
-        "statusCode": 200,
-        "body": dumps(product)
-    }
+        if not product_id:
+            return create_error_response(400, "Product id is required")
+        
+        product = products_db.get_product(product_id)
+        if not product:
+            return create_error_response(404, f"Product with id {product_id} not found")
+        
+        return create_success_response(200, product)
+    except Exception as e:
+        print(f"Unexpected error: {str(e)}")
+        return create_error_response(500, f"Internal Server Error: {str(e)}")

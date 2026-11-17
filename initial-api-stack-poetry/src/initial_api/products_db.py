@@ -20,3 +20,6 @@ def get_all_products():
 
 def get_products_by_category(category):
     return [p for p in PRODUCT_CATALOG.values() if category == p.get('category')]
+
+def get_product(product_id):
+   return PRODUCT_CATALOG.get(product_id)
