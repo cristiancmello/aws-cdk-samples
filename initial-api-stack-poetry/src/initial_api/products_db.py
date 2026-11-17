@@ -23,3 +23,6 @@ def get_products_by_category(category):
 
 def get_product(product_id):
    return PRODUCT_CATALOG.get(product_id)
+
+def insert_product(item):
+   raise NotImplementedError("This function is not implemented yet....")
