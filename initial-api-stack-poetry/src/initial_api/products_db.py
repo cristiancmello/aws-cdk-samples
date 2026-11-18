@@ -26,3 +26,6 @@ def get_product(product_id):
 
 def insert_product(item):
    raise NotImplementedError("This function is not implemented yet....")
+
+def delete_product(product_id):
+   raise NotImplementedError("This function is not implemented yet.")  
