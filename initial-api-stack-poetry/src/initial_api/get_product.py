@@ -1,10 +1,16 @@
 
+from __future__ import annotations
+from typing import Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from aws_lambda_powertools.utilities.data_classes import APIGatewayProxyEvent
+    from aws_lambda_powertools.utilities.typing import LambdaContext
+
 import products_db
 
 from response_utils import create_error_response, create_success_response
 
-
-def handler(event, context):
+def handler(event: APIGatewayProxyEvent, context: LambdaContext):
     try:
         path_parameters = event.get("pathParameters") or {}
         product_id = path_parameters.get("id")
