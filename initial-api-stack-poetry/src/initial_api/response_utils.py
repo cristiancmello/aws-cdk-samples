@@ -9,6 +9,13 @@ access_control_headers= {
 headers={**access_control_headers, 'Content-Type': 'application/json'}
 options_headers={**access_control_headers, 'Access-Control-Max-Age': '86400'}
 
+def create_options_response():
+    """Create standardized response for OPTIONS requests"""
+    return {
+        'statusCode': 200,
+        'headers': options_headers
+    }
+
 def create_error_response(status_code, message):
     """Create standardized error response for API Gateway"""
     return {

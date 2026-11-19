@@ -51,6 +51,13 @@ class InitialStack(Stack):
             reserved_concurrent_executions = default_concurrent_executions
         )
 
+        self.options_handler= aws_lambda.Function(self, "APIOptions",
+            runtime=lambda_runtime,
+            handler="options.handler",
+            code=aws_lambda.Code.from_asset(code_location),
+            reserved_concurrent_executions = default_concurrent_executions,
+        )
+
         api = aws_apigateway.RestApi(
             self, "ProductsAPI",
             rest_api_name="ProductsApi",
@@ -69,6 +76,7 @@ class InitialStack(Stack):
         product_resource_id.add_method("GET", aws_apigateway.LambdaIntegration(self.get_product))
         product_resource_id.add_method("DELETE", aws_apigateway.LambdaIntegration(self.delete_product))
         product_resource_id.add_method("PUT", aws_apigateway.LambdaIntegration(self.update_product))
+        product_resource_id.add_method("OPTIONS", aws_apigateway.LambdaIntegration(self.options_handler))
 
         self.api=api
         CfnOutput(self, "ProductsApiUrl", value=f'{api.url}products')
