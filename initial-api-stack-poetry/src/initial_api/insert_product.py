@@ -14,6 +14,8 @@ def handler(event, context):
       item['id'] = id
       products_db.insert_product(item)
       return create_success_response(201, item)
+   except json.JSONDecodeError:
+      return create_error_response(400, 'Invalid JSON in request body')
    except Exception as e:
       print(f"Unexpected error: {str(e)}")
       return create_error_response(500, f'Internal server error - {str(e)}')
